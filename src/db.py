@@ -2,32 +2,16 @@ import os
 import pathlib
 from sqlalchemy import create_engine, Table, MetaData, Column, Integer, String
 from sqlalchemy.exc import OperationalError
-from sqlalchemy.sql.schema import ForeignKey, MetaData
+from sqlalchemy.sql.schema import ForeignKey
+from sqlalchemy.orm import declarative_base
+
+Base = declarative_base()
 
 DB_NAME = "db.sqlite3"
 DB_DIR = pathlib.Path(__file__).parent.parent.absolute() # Gets the parent path for the file for the creation of the file
 DB_PATH = "sqlite:///" + str(DB_DIR / DB_NAME) # Create the path of the db
 
-def initialise():
-    db = create_engine(DB_PATH)
-    try:
-        db = create_engine(DB_PATH)
-        db.connect()
-        db.execute("SELECT 1;")
-    except OperationalError:
-        db.create_engine(DB_PATH)
-    meta = MetaData()
-        
-    # Creating the schema for the db
-    calendar = Table("calendar",meta,
-        Column("id", Integer, primary_key=True),
-        Column("name", String),
-        Column("description", String),
-        Column("timezone", String),
-        Column("created", Integer),
-        Column("last_modified", Integer)
-    )
-    calendar.create(db, checkfirst=True)
+class Calendar(Base):
     """TODO: 
     ctag VARCHAR,
     orderindex INTEGER DEFAULT 0,
@@ -37,15 +21,16 @@ def initialise():
     supported_component_set INTEGER,
     """
 
-    events = Table("events", meta,
-        Column("id", Integer, primary_key=True),
-        Column("calendar_id", Integer, ForeignKey("calendar.id")), # Foreign Key
-        Column("title", String),
-        Column("start", Integer, nullable=False),
-        Column("end", Integer, nullable=False),
-        Column("timezone", String)
-    )
-    events.create(db, checkfirst=True)
+    __tablename__ = "calendar"
+
+    id = Column(Integer, primary_key=True)
+    title = Column(String)
+    description = Column(String)
+    timezone = Column(String)
+    created = Column(Integer)
+    last_modified = Column(Integer)
+
+class Events(Base):
     """TODO:
         alarm_id INTEGER,
         description LONGVARCHAR,
@@ -79,6 +64,25 @@ def initialise():
         created INTEGER,
         last_modified INTEGER
     """
+
+    __tablename__ = "events"
+    id = Column(Integer, primary_key=True)
+    calendar_id = Column(Integer, ForeignKey("calendar.id")) # Foreign Key
+    title = Column(String)
+    start = Column(Integer, nullable=False)
+    end = Column(Integer, nullable=False)
+    timezone = Column(String)
+
+
+def initialise():
+    db = create_engine(DB_PATH)
+    try:
+        db = create_engine(DB_PATH)
+        db.connect()
+        db.execute("SELECT 1;")
+    except OperationalError:
+        Base.metadata.create_all(db)
+   
 
     """TODO: Add recurring events and notifications"""
 

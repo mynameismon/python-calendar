@@ -66,7 +66,7 @@ CREATE TABLE recurring_exceptions(
   created INTEGER,
   last_modified INTEGER
 );
-CREATE TABLE notifications( // if we have time
+CREATE TABLE notifications( -- if we have time
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   event_id INTEGER,
   name LONGVARCHAR,

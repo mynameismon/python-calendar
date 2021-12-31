@@ -1,8 +1,7 @@
 
 
 from tkinter import *
-import sys 
-sys.path.append('C:/MyFolder/school_trash/class12/comp/practicals/PyCal2/')
+
 import calendar_display 
 import add_events
 import src.db as db

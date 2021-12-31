@@ -22,7 +22,7 @@ import sqlite3
 event_to_add = ""
 
 
-event_var = StringVar()
+
 
 
 
@@ -39,6 +39,7 @@ def add_event():
     addition.title("Add events")
     addition.configure(background = "#B1F5F5")
     addition.geometry("800x800")
+    event_var = StringVar()
     header = Label(addition, text = "Add an event. Type it in YYYY/MM/DD HH:mm:SS Format", font = "consolas 11")
     header.grid(row = 2, column = 1, padx = 20)
     

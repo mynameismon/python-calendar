@@ -55,6 +55,7 @@ class MultiColumnListbox():
                 width=tkFont.Font().measure(col.title()))
 
         for item in self.rows:
+            item = [[x,] for x in item] # gets around tkinter trying to be smart: https://stackoverflow.com/a/66769723/9496502
             self.tree.insert('', 'end', values=item)
             # adjust column's width if necessary to fit each value
             for ix, val in enumerate(item):

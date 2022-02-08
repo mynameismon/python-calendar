@@ -3,11 +3,11 @@ import sqlalchemy as sqla
 from sqlalchemy import or_, select
 from sqlalchemy.orm import Session
 import datetime
-from .db import DB_PATH, Events, Calendar
+from src.db import DB_PATH, Events, Calendar
 
 try:
     from ..config import DEFAULT_TIMEZONE, TODAY, DEFAULT_ENDTIME
-except ImportError:
+except (ImportError, ValueError):
     import sys
     sys.path.append("..")
     from config import DEFAULT_TIMEZONE, TODAY, DEFAULT_ENDTIME

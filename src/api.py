@@ -13,6 +13,13 @@ except (ImportError, ValueError):
     from config import DEFAULT_TIMEZONE, TODAY, DEFAULT_ENDTIME
 
 
+def get_default_calendar():
+    db_engine = sqla.create_engine(DB_PATH)
+    db_engine.connect()
+    statement = select(Calendar.id).limit(1)
+    result = db_engine.execute(statement).fetchall()[0]
+    return result
+
 def get_events(start_date=TODAY, end_date=DEFAULT_ENDTIME):
     db_engine = sqla.create_engine(DB_PATH)
     db_engine.connect()
@@ -25,16 +32,16 @@ def get_events(start_date=TODAY, end_date=DEFAULT_ENDTIME):
         return results
 
     except Exception as e:
-        return e
+        raise e
     
-def insert_events(calender_id, title, start_date, end_date, timezone = DEFAULT_TIMEZONE):
+def insert_events(title, start_date, end_date, timezone = DEFAULT_TIMEZONE, calendar = get_default_calendar()):
     db_engine = sqla.create_engine(DB_PATH)
     db_engine.connect()
     try:
         with Session(db_engine) as db_sessions:
-            new_event = Events(calendar_id = 1,title = title, start = start_date, end = end_date, timezone= timezone)
+            new_event = Events(calendar_id = calendar, title = title, start = start_date, end = end_date, timezone= timezone)
             db_sessions.add(new_event)
             db_sessions.commit()
 
     except Exception as e:
-        return e
+        raise e

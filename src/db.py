@@ -1,6 +1,7 @@
 import os
 import pathlib
-from sqlalchemy import create_engine, Table, MetaData, Column, Integer, String
+from tkinter.tix import COLUMN
+from sqlalchemy import BLOB, create_engine, Table, MetaData, Column, Integer, String
 from sqlalchemy.exc import OperationalError
 from sqlalchemy.sql.schema import ForeignKey
 from sqlalchemy.orm import declarative_base
@@ -72,6 +73,7 @@ class Events(Base):
     start = Column(Integer, nullable=False)
     end = Column(Integer, nullable=False)
     timezone = Column(String)
+    ics = Column(BLOB)
 
 
 def initialise():

@@ -1,10 +1,13 @@
+from datetime import datetime
 import os
 import pathlib
 from tkinter.tix import COLUMN
-from sqlalchemy import BLOB, create_engine, Table, MetaData, Column, Integer, String
+from sqlalchemy import BLOB, create_engine, Table, MetaData, Column, Integer, String, select, insert
 from sqlalchemy.exc import OperationalError
 from sqlalchemy.sql.schema import ForeignKey
 from sqlalchemy.orm import declarative_base
+
+from config import DEFAULT_ENDTIME, DEFAULT_TIMEZONE
 
 Base = declarative_base()
 
@@ -78,13 +81,17 @@ class Events(Base):
 
 def initialise():
     db = create_engine(DB_PATH)
-    try:
-        db = create_engine(DB_PATH)
-        db.connect()
-        db.execute("SELECT 1;")
-    except OperationalError:
-        Base.metadata.create_all(db)
+    Base.metadata.create_all(db)
    
+    db.connect()
+    
+    statement = select([True]).where(Calendar.id == 1).limit(1)
+    results = db.execute(statement).fetchall()
+    if (len(results)):
+        return None
+    insert_statement = insert(Calendar).values(title = "New Calendar", timezone = DEFAULT_TIMEZONE, created = datetime.now())
+    db.execute(insert_statement)
+    db.commit()
 
     """TODO: Add recurring events and notifications"""
 

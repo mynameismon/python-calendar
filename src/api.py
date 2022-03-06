@@ -12,14 +12,6 @@ except (ImportError, ValueError):
     sys.path.append("..")
     from config import DEFAULT_TIMEZONE, TODAY, DEFAULT_ENDTIME
 
-
-def get_default_calendar():
-    db_engine = sqla.create_engine(DB_PATH)
-    db_engine.connect()
-    statement = select(Calendar.id).limit(1)
-    result = db_engine.execute(statement).fetchall()[0]
-    return result
-
 def get_events(start_date=TODAY, end_date=DEFAULT_ENDTIME):
     db_engine = sqla.create_engine(DB_PATH)
     db_engine.connect()
@@ -34,7 +26,7 @@ def get_events(start_date=TODAY, end_date=DEFAULT_ENDTIME):
     except Exception as e:
         raise e
     
-def insert_events(title, start_date, end_date, timezone = DEFAULT_TIMEZONE, calendar = get_default_calendar()):
+def insert_events(title, start_date, end_date, timezone = DEFAULT_TIMEZONE, calendar = 1):
     db_engine = sqla.create_engine(DB_PATH)
     db_engine.connect()
     try:

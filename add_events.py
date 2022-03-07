@@ -68,7 +68,7 @@ def add_event():
         #Mon, these two variables above me are what you want
         #now just dump them into the DB
 
-    buttonAddEvent = Button(addition, text = "Add event", command = getValue).grid(row = 9, column = 1)
+    buttonAddEvent = Button(addition, text = "Add event", command = getValue).grid(row = 13, column = 1)
     
     
     
